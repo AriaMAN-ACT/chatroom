@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>chatroom</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
+</head>
+<body>
+<div class="ui container segment">
+    <form class="ui form" id="form">
+        <div class="field">
+            <label>Message</label>
+            <input type="text" name="message" placeholder="Message" id="input"/>
+        </div>
+        <button class="ui button right labeled icon basic primary " type="submit">
+            <i class="right arrow icon"></i>
+            Send
+        </button>
+    </form>
+</div>
+<div class="ui container segment">
+    <div class="ui list" id="chat">
+    </div>
+</div>
+<script src="socket.io/socket.io.js"></script>
+<script>
+    const socket = io('http://localhost:3000');
+
+    socket.on('serverMsg', res => {
+        document.getElementById('chat').innerHTML += `<div class="item">${res.id}: ${res.msg}</div>`;
+    });
+
+    document.getElementById('form').addEventListener('submit', event => {
+        event.preventDefault();
+        const input = document.getElementById('input');
+        socket.emit('clientMsg', input.value);
+        input.value = '';
+    });
+</script>
+</body>
+</html>
