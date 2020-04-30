@@ -18,17 +18,25 @@ namespaces.forEach(namespace => {
         socket.on(socketEvents.joinRoom, data => {
             socket.join(data.room);
             io.of(data.namespace).in(data.room).clients((error, clients) => {
-                io.of(data.namespace).in(data.room).emit(socketEvents.showMembers, clients);
+                io.of(data.namespace).in(data.room).emit(socketEvents.showMembers, {
+                    members: clients,
+                    room: data.room
+                });
             });
+            const nsRoom = namespace.rooms.find(nsRoom => nsRoom.roomTitle === data.room);
+            socket.emit(socketEvents.getHistory, nsRoom.history);
         });
         socket.on(socketEvents.clientMsg, message => {
             const room = Object.keys(socket.rooms)[1];
-            io.of(namespace.endpoint).to(room).emit(socketEvents.serverMsg, {
+            const msgObj = {
                 message,
                 time: Date.now(),
                 username: 'Aria',
                 avatar: 'http://via.placeholder.com/30'
-            });
+            };
+            const nsRoom = namespace.rooms.find(nsRoom => nsRoom.roomTitle === room);
+            nsRoom.addMessage(msgObj);
+            io.of(namespace.endpoint).to(room).emit(socketEvents.serverMsg, msgObj);
         });
     });
 });

@@ -6,5 +6,6 @@ module.exports = Object.freeze({
     nsList: 'nsList',
     nsLoadRooms: 'nsLoadRooms',
     joinRoom: 'joinRoom',
-    showMembers: 'showMembers'
+    showMembers: 'showMembers',
+    getHistory: 'getHistory'
 });

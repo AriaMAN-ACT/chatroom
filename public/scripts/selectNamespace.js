@@ -20,8 +20,8 @@ const selectNamespace = (nsData, index, socket) => {
             });
         })
     });
-    nsSocket.on('showMembers', clients => {
-        showMembers(clients.length);
+    nsSocket.on('showMembers', data => {
+        showMembers(data);
     });
     messaging(nsSocket);
 };
