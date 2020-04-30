@@ -1,6 +1,7 @@
 const socketIo = require('socket.io');
 const express = require('express');
 
+const namespaces = require('./utils/namespaces');
 const socketEvents = require('./models/SocketEvents');
 
 const app = express();
@@ -11,10 +12,17 @@ const server = app.listen(3000);
 
 const io = socketIo(server);
 
-io.on('connection', (socket, req) => {
-    socket.emit(socketEvents.successfulConnection, 'server connected');
+namespaces.forEach(namespace => {
+    io.of(namespace.endpoint).on(socketEvents.connection, socket => {})
+});
 
-    socket.on(socketEvents.clientMsg, msg => {
-        io.emit(socketEvents.serverMsg, {msg, id: socket.id});
+io.on(socketEvents.connection, (socket, req) => {
+    const nsData = namespaces.map(namespace => {
+        return {
+            image: namespace.img,
+            endpoint: namespace.endpoint
+        };
     });
+
+    socket.emit(socketEvents.nsList, nsData);
 });
