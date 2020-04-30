@@ -14,6 +14,7 @@ const io = socketIo(server);
 
 namespaces.forEach(namespace => {
     io.of(namespace.endpoint).on(socketEvents.connection, socket => {
+        const username = socket.handshake.query.username;
         socket.emit(socketEvents.nsLoadRooms, namespace.rooms);
         socket.on(socketEvents.joinRoom, data => {
             const rooms = Object.keys(socket.rooms);
@@ -41,7 +42,7 @@ namespaces.forEach(namespace => {
             const msgObj = {
                 message,
                 time: Date.now(),
-                username: 'Aria',
+                username,
                 avatar: 'http://via.placeholder.com/30'
             };
             const nsRoom = namespace.rooms.find(nsRoom => nsRoom.roomTitle === room);
