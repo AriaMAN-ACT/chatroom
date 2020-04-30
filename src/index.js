@@ -1,7 +1,7 @@
 const socketIo = require('socket.io');
 const express = require('express');
 
-const socketEvents = require('./model/SocketEvents');
+const socketEvents = require('./models/SocketEvents');
 
 const app = express();
 
