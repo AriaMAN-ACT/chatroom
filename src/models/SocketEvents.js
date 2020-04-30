@@ -4,5 +4,7 @@ module.exports = Object.freeze({
     serverMsg: 'serverMsg',
     clientMsg: 'clientMsg',
     nsList: 'nsList',
-    nsLoadRooms: 'nsLoadRooms'
+    nsLoadRooms: 'nsLoadRooms',
+    joinRoom: 'joinRoom',
+    showMembers: 'showMembers'
 });

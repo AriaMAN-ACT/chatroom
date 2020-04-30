@@ -15,7 +15,22 @@ const io = socketIo(server);
 namespaces.forEach(namespace => {
     io.of(namespace.endpoint).on(socketEvents.connection, socket => {
         socket.emit(socketEvents.nsLoadRooms, namespace.rooms);
-    })
+        socket.on(socketEvents.joinRoom, data => {
+            socket.join(data.room);
+            io.of(data.namespace).in(data.room).clients((error, clients) => {
+                io.of(data.namespace).in(data.room).emit(socketEvents.showMembers, clients);
+            });
+        });
+        socket.on(socketEvents.clientMsg, message => {
+            const room = Object.keys(socket.rooms)[1];
+            io.of(namespace.endpoint).to(room).emit(socketEvents.serverMsg, {
+                message,
+                time: Date.now(),
+                username: 'Aria',
+                avatar: 'http://via.placeholder.com/30'
+            });
+        });
+    });
 });
 
 io.on(socketEvents.connection, (socket, req) => {
