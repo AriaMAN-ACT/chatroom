@@ -3,5 +3,6 @@ module.exports = Object.freeze({
     successfulConnection: 'successfulConnection',
     serverMsg: 'serverMsg',
     clientMsg: 'clientMsg',
-    nsList: 'nsList'
+    nsList: 'nsList',
+    nsLoadRooms: 'nsLoadRooms'
 });

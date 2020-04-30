@@ -13,7 +13,9 @@ const server = app.listen(3000);
 const io = socketIo(server);
 
 namespaces.forEach(namespace => {
-    io.of(namespace.endpoint).on(socketEvents.connection, socket => {})
+    io.of(namespace.endpoint).on(socketEvents.connection, socket => {
+        socket.emit(socketEvents.nsLoadRooms, namespace.rooms);
+    })
 });
 
 io.on(socketEvents.connection, (socket, req) => {
