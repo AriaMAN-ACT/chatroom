@@ -16,6 +16,16 @@ namespaces.forEach(namespace => {
     io.of(namespace.endpoint).on(socketEvents.connection, socket => {
         socket.emit(socketEvents.nsLoadRooms, namespace.rooms);
         socket.on(socketEvents.joinRoom, data => {
+            const rooms = Object.keys(socket.rooms);
+            for (let i = 1; i < rooms.length; i++) {
+                socket.leave(rooms[i]);
+                io.of(data.namespace).in(rooms[i]).clients((error, clients) => {
+                    io.of(data.namespace).in(rooms[i]).emit(socketEvents.showMembers, {
+                        members: clients,
+                        room: rooms[i]
+                    });
+                });
+            }
             socket.join(data.room);
             io.of(data.namespace).in(data.room).clients((error, clients) => {
                 io.of(data.namespace).in(data.room).emit(socketEvents.showMembers, {
